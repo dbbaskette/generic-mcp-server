@@ -1,11 +1,6 @@
 package com.example.genericmcp.service;
 
-import org.springframework.ai.mcp.server.McpRequestHandler;
-import org.springframework.ai.mcp.spec.McpSchema;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Generic MCP Service that provides template implementations for common MCP tools.
@@ -14,11 +9,11 @@ import java.util.Map;
  * 1. Replace the simple string returns with actual business logic
  * 2. Add proper input validation and error handling
  * 3. Integrate with your data sources (databases, APIs, files, etc.)
- * 4. Add additional tools by creating new @McpTool annotated methods
- * 5. Update tool descriptions and parameter schemas to match your use case
+ * 4. Add additional tools by creating new function beans in the main application class
+ * 5. Update function descriptions to match your use case
  */
 @Service
-public class GenericMcpService implements McpRequestHandler {
+public class GenericMcpService {
 
     /**
      * Generic data retrieval tool.
@@ -29,13 +24,7 @@ public class GenericMcpService implements McpRequestHandler {
      * - Implement error handling for data source failures
      * - Consider adding pagination for large datasets
      */
-    @McpTool(
-        name = "get_data",
-        description = "Retrieves data based on the provided query parameters"
-    )
-    public String getData(
-            @McpSchema(description = "The type of data to retrieve") String dataType,
-            @McpSchema(description = "Optional filter criteria") String filter) {
+    public String getData(String dataType, String filter) {
         
         // TODO: Replace with actual data retrieval logic
         // Example implementations:
@@ -55,13 +44,7 @@ public class GenericMcpService implements McpRequestHandler {
      * - Integrate with external text processing services
      * - Add proper error handling for malformed input
      */
-    @McpTool(
-        name = "process_text",
-        description = "Processes text according to the specified operation"
-    )
-    public String processText(
-            @McpSchema(description = "The text content to process") String content,
-            @McpSchema(description = "The type of processing to perform") String operation) {
+    public String processText(String content, String operation) {
         
         // TODO: Replace with actual text processing logic
         // Example implementations:
@@ -82,14 +65,7 @@ public class GenericMcpService implements McpRequestHandler {
      * - Integrate with calculation libraries or external computation services
      * - Add proper number validation and overflow handling
      */
-    @McpTool(
-        name = "calculate",
-        description = "Performs calculations based on provided numbers and operation"
-    )
-    public String calculate(
-            @McpSchema(description = "First number for calculation") Double num1,
-            @McpSchema(description = "Second number for calculation") Double num2,
-            @McpSchema(description = "Operation to perform (add, subtract, multiply, divide)") String operation) {
+    public String calculate(Double num1, Double num2, String operation) {
         
         // TODO: Replace with actual calculation logic
         // Example implementations:
@@ -109,11 +85,7 @@ public class GenericMcpService implements McpRequestHandler {
      * - Add security considerations for sensitive system information
      * - Implement proper access controls for system data
      */
-    @McpTool(
-        name = "get_system_info",
-        description = "Retrieves system information and status"
-    )
-    public String getSystemInfo(@McpSchema(description = "Type of system information to retrieve") String infoType) {
+    public String getSystemInfo(String infoType) {
         
         // TODO: Replace with actual system information retrieval
         // Example implementations:
@@ -134,13 +106,7 @@ public class GenericMcpService implements McpRequestHandler {
      * - Integrate with validation frameworks or external validation services
      * - Return detailed validation results with specific error messages
      */
-    @McpTool(
-        name = "validate_data",
-        description = "Validates data according to specified rules"
-    )
-    public String validateData(
-            @McpSchema(description = "The data to validate") String data,
-            @McpSchema(description = "The validation rules to apply") String rules) {
+    public String validateData(String data, String rules) {
         
         // TODO: Replace with actual validation logic
         // Example implementations:
@@ -156,10 +122,6 @@ public class GenericMcpService implements McpRequestHandler {
      * Lists all available tools provided by this MCP server.
      * This is useful for clients to discover what capabilities are available.
      */
-    @McpTool(
-        name = "list_tools",
-        description = "Lists all available tools and their descriptions"
-    )
     public String listTools() {
         return """
                Available Generic MCP Tools:
