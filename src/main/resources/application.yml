@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
@@ -8,10 +8,14 @@ spring:
     mcp:
       server:
         enabled: true
-        transport: webmvc-sse
+        # WebMVC SSE transport is auto-configured by spring-ai-starter-mcp-server-webmvc
         endpoint: /mcp
+        capabilities:
+          tools: true
+          resources: true
+          prompts: true
 
 logging:
   level:
     com.example.genericmcp: DEBUG
-    org.springframework.ai: DEBUG
+    org.springframework.ai.mcp: DEBUG

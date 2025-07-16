@@ -28,22 +28,23 @@ cd generic-mcp-server
 mvn spring-boot:run
 ```
 
-The server will start on `http://localhost:8080` with the MCP endpoint available at `/mcp`.
+The server will start on `http://localhost:8081` with the MCP endpoint available at `/mcp`.
 
 ### Health Check
 
-Visit `http://localhost:8080/health` to verify the server is running.
+Visit `http://localhost:8081/health` to verify the server is running.
 
 ## Available MCP Tools
 
-This generic implementation provides the following tools:
+This generic implementation provides the following tools (automatically registered via @Tool annotations):
 
-1. **get_data** - Retrieves data based on query parameters
-2. **process_text** - Processes text according to specified operations
-3. **calculate** - Performs mathematical calculations
-4. **get_system_info** - Retrieves system information and status
-5. **validate_data** - Validates data according to specified rules
-6. **list_tools** - Lists all available tools
+1. **get_hello** - Returns a simple greeting from the MCP server
+2. **get_data** - Retrieves data based on query parameters  
+3. **process_text** - Processes text according to specified operations
+4. **calculate** - Performs mathematical calculations
+5. **get_system_info** - Retrieves system information and status
+6. **validate_data** - Validates data according to specified rules
+7. **list_tools** - Lists all available tools
 
 ## Customization Guide
 
@@ -55,8 +56,8 @@ This generic implementation provides the following tools:
    - Implement proper error handling and validation
 
 2. **Add New Tools**
-   - Create new methods annotated with `@McpTool`
-   - Define proper parameter schemas with `@McpSchema`
+   - Create new methods annotated with `@Tool`
+   - Define proper parameter descriptions with `@ToolParam`
    - Add comprehensive descriptions for AI model understanding
 
 3. **Configure Dependencies**
@@ -66,14 +67,20 @@ This generic implementation provides the following tools:
 ### Example Customization
 
 ```java
-@McpTool(
-    name = "query_database",
-    description = "Queries the customer database"
-)
+@Tool(description = "Queries the customer database")
 public String queryDatabase(
-        @McpSchema(description = "SQL query to execute") String query) {
+        @ToolParam(description = "SQL query to execute") String query) {
     // Replace with actual database logic
     return customerRepository.executeQuery(query);
+}
+
+@Tool(description = "Send email notification")
+public String sendEmail(
+        @ToolParam(description = "Recipient email address") String to,
+        @ToolParam(description = "Email subject") String subject,
+        @ToolParam(description = "Email body content") String body) {
+    // Replace with actual email service
+    return emailService.send(to, subject, body);
 }
 ```
 
@@ -98,10 +105,11 @@ generic-mcp-server/
 
 The server is configured via `src/main/resources/application.yml`:
 
-- **Port**: 8080 (configurable)
+- **Port**: 8081 (configurable)
 - **MCP Endpoint**: `/mcp`
-- **Transport**: WebMVC with Server-Sent Events
-- **Logging**: DEBUG level for development
+- **Transport**: WebMVC with Server-Sent Events (auto-configured)
+- **Capabilities**: Tools, Resources, Prompts, and Completions enabled
+- **Logging**: DEBUG level for MCP and application packages
 
 ## Development
 

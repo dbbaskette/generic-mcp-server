@@ -1,5 +1,7 @@
 package com.example.genericmcp.service;
 
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,11 +11,28 @@ import org.springframework.stereotype.Service;
  * 1. Replace the simple string returns with actual business logic
  * 2. Add proper input validation and error handling
  * 3. Integrate with your data sources (databases, APIs, files, etc.)
- * 4. Add additional tools by creating new function beans in the main application class
- * 5. Update function descriptions to match your use case
+ * 4. Add additional tools by creating new @Tool annotated methods
+ * 5. Update tool descriptions and parameter descriptions to match your use case
  */
 @Service
 public class GenericMcpService {
+
+    /**
+     * Simple greeting tool for testing MCP functionality.
+     * 
+     * CUSTOMIZATION GUIDE:
+     * - Replace with actual greeting logic (user lookup, personalization, etc.)
+     * - Add authentication or user context if needed
+     */
+    @Tool(description = "Returns a simple hello greeting from the MCP server")
+    public String getHello() {
+        // TODO: Replace with actual greeting logic
+        // Example implementations:
+        // - Personalized greeting: return "Hello, " + userService.getCurrentUser().getName();
+        // - Time-based greeting: return greetingService.getTimeBasedGreeting();
+        
+        return "Hello from Generic MCP Server! Ready to process your requests.";
+    }
 
     /**
      * Generic data retrieval tool.
@@ -24,7 +43,10 @@ public class GenericMcpService {
      * - Implement error handling for data source failures
      * - Consider adding pagination for large datasets
      */
-    public String getData(String dataType, String filter) {
+    @Tool(description = "Retrieves data based on the provided query parameters")
+    public String getData(
+            @ToolParam(description = "The type of data to retrieve") String dataType,
+            @ToolParam(description = "Optional filter criteria", required = false) String filter) {
         
         // TODO: Replace with actual data retrieval logic
         // Example implementations:
@@ -44,7 +66,10 @@ public class GenericMcpService {
      * - Integrate with external text processing services
      * - Add proper error handling for malformed input
      */
-    public String processText(String content, String operation) {
+    @Tool(description = "Processes text according to the specified operation")
+    public String processText(
+            @ToolParam(description = "The text content to process") String content,
+            @ToolParam(description = "The type of processing to perform") String operation) {
         
         // TODO: Replace with actual text processing logic
         // Example implementations:
@@ -65,7 +90,11 @@ public class GenericMcpService {
      * - Integrate with calculation libraries or external computation services
      * - Add proper number validation and overflow handling
      */
-    public String calculate(Double num1, Double num2, String operation) {
+    @Tool(description = "Performs calculations based on provided numbers and operation")
+    public String calculate(
+            @ToolParam(description = "First number for calculation") Double num1,
+            @ToolParam(description = "Second number for calculation") Double num2,
+            @ToolParam(description = "Operation to perform (add, subtract, multiply, divide)") String operation) {
         
         // TODO: Replace with actual calculation logic
         // Example implementations:
@@ -85,7 +114,9 @@ public class GenericMcpService {
      * - Add security considerations for sensitive system information
      * - Implement proper access controls for system data
      */
-    public String getSystemInfo(String infoType) {
+    @Tool(description = "Retrieves system information and status")
+    public String getSystemInfo(
+            @ToolParam(description = "Type of system information to retrieve") String infoType) {
         
         // TODO: Replace with actual system information retrieval
         // Example implementations:
@@ -106,7 +137,10 @@ public class GenericMcpService {
      * - Integrate with validation frameworks or external validation services
      * - Return detailed validation results with specific error messages
      */
-    public String validateData(String data, String rules) {
+    @Tool(description = "Validates data according to specified rules")
+    public String validateData(
+            @ToolParam(description = "The data to validate") String data,
+            @ToolParam(description = "The validation rules to apply") String rules) {
         
         // TODO: Replace with actual validation logic
         // Example implementations:
@@ -122,16 +156,18 @@ public class GenericMcpService {
      * Lists all available tools provided by this MCP server.
      * This is useful for clients to discover what capabilities are available.
      */
+    @Tool(description = "Lists all available tools and their descriptions")
     public String listTools() {
         return """
                Available Generic MCP Tools:
                
-               1. get_data - Retrieves data based on query parameters
-               2. process_text - Processes text according to specified operations
-               3. calculate - Performs mathematical calculations
-               4. get_system_info - Retrieves system information and status
-               5. validate_data - Validates data according to specified rules
-               6. list_tools - Lists all available tools (this tool)
+               1. get_hello - Returns a simple greeting from the MCP server
+               2. get_data - Retrieves data based on query parameters
+               3. process_text - Processes text according to specified operations
+               4. calculate - Performs mathematical calculations
+               5. get_system_info - Retrieves system information and status
+               6. validate_data - Validates data according to specified rules
+               7. list_tools - Lists all available tools (this tool)
                
                Each tool returns a simple string response in this generic implementation.
                Customize the implementations in GenericMcpService.java to add real functionality.
