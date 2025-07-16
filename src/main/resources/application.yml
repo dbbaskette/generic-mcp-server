@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: generic-mcp-server
+  ai:
+    mcp:
+      server:
+        enabled: true
+        transport: webmvc-sse
+        endpoint: /mcp
+
+logging:
+  level:
+    com.example.genericmcp: DEBUG
+    org.springframework.ai: DEBUG
