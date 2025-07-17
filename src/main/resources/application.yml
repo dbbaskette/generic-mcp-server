@@ -1,3 +1,14 @@
+# =============================================
+# Application Configuration for Generic MCP Server
+# ---------------------------------------------
+# - name: Application name for Spring context
+# - banner-mode: Disables Spring Boot startup banner
+# - log-startup-info: Suppresses startup info logs
+# - ai.mcp.server.enabled: Enables MCP server (stdio transport)
+# - ai.mcp.server.capabilities: Enables tools/resources/prompts
+# - logging.level: Sets log levels for app, MCP, Spring AI, and root
+# =============================================
+
 spring:
   application:
     name: generic-mcp-server

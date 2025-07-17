@@ -4,84 +4,75 @@ A generic Model Context Protocol (MCP) server built with Spring Boot 3.5.3, Spri
 
 ## Features
 
-- **WebMVC Server Transport with SSE**: Uses Server-Sent Events for real-time communication
+- **Stdio Transport**: Designed for integration with tools like Claude Desktop (runs as a process, communicates via standard input/output)
 - **Generic MCP Tools**: Pre-implemented tools that return simple strings (ready for customization)
 - **Spring Boot 3.5.3**: Latest stable Spring Boot version
 - **Spring AI 1.0.0**: Latest Spring AI framework integration
 - **Java 21**: Modern Java features and performance improvements
-- **Maven Build**: Standard Maven project structure
+- **Maven Build**: Standard Maven project structure with Maven Wrapper
 
 ## Quick Start
 
 ### Prerequisites
 
 - Java 21 or higher
-- Maven 3.6 or higher
+- No need to install Maven globally (Maven Wrapper included)
 
 ### Running the Server
 
 ```bash
 # Clone and navigate to the project
+git clone https://github.com/dbbaskette/generic-mcp-server.git
 cd generic-mcp-server
 
-# Run the server
-mvn spring-boot:run
+# Start the server (kills any running instance, builds, and runs)
+./start.sh
 ```
 
-The server will start on `http://localhost:8081` with the MCP endpoint available at `/mcp`.
+The server will start and wait for stdio input (no web port is exposed by default).
 
-### Health Check
-
-Visit `http://localhost:8081/health` to verify the server is running.
+### Stopping the Server
+- Use `Ctrl+C` in the terminal to stop the server.
 
 ## Available MCP Tools
 
-This generic implementation provides the following tools (automatically registered via @Tool annotations):
+This generic implementation provides the following tools (see `GenericMcpService.java`):
 
 1. **get_hello** - Returns a simple greeting from the MCP server
-2. **get_data** - Retrieves data based on query parameters  
+2. **get_data** - Retrieves data based on query parameters
 3. **process_text** - Processes text according to specified operations
 4. **calculate** - Performs mathematical calculations
 5. **get_system_info** - Retrieves system information and status
 6. **validate_data** - Validates data according to specified rules
 7. **list_tools** - Lists all available tools
 
-## Customization Guide
+## Configuration
 
-### Adding Real Functionality
+The server is configured via `src/main/resources/application.yml`:
 
-1. **Edit `/src/main/java/com/example/genericmcp/service/GenericMcpService.java`**
-   - Replace simple string returns with actual business logic
-   - Add your data sources (databases, APIs, files)
-   - Implement proper error handling and validation
+```yaml
+spring:
+  application:
+    name: generic-mcp-server   # Application name
+  main:
+    banner-mode: off          # Disable Spring Boot banner
+    log-startup-info: false   # Suppress startup info logs
+  ai:
+    mcp:
+      server:
+        enabled: true         # Enable MCP server
+        # Stdio transport only for Claude Desktop compatibility
+        capabilities:
+          tools: true         # Enable tool support
+          resources: true     # Enable resource support
+          prompts: true       # Enable prompt support
 
-2. **Add New Tools**
-   - Create new methods annotated with `@Tool`
-   - Define proper parameter descriptions with `@ToolParam`
-   - Add comprehensive descriptions for AI model understanding
-
-3. **Configure Dependencies**
-   - Add required dependencies to `pom.xml`
-   - Update `application.yml` with your configuration
-
-### Example Customization
-
-```java
-@Tool(description = "Queries the customer database")
-public String queryDatabase(
-        @ToolParam(description = "SQL query to execute") String query) {
-    // Replace with actual database logic
-    return customerRepository.executeQuery(query);
-}
-
-@Tool(description = "Send email notification")
-public String sendEmail(
-        @ToolParam(description = "Recipient email address") String to,
-        @ToolParam(description = "Email subject") String subject,
-        @ToolParam(description = "Email body content") String body) {
-    // Replace with actual email service
-    return emailService.send(to, subject, body);
-}
+logging:
+  level:
+    com.example.genericmcp: DEBUG           # Debug logging for app
+    org.springframework.ai.mcp: DEBUG       # Debug logging for MCP
+    org.springframework.ai: DEBUG           # Debug logging for Spring AI
+    root: WARN                             # Default log level
 ```
 
 ## Project Structure
@@ -89,46 +80,40 @@ public String sendEmail(
 ```
 generic-mcp-server/
 ├── src/main/java/com/example/genericmcp/
-│   ├── GenericMcpServerApplication.java    # Main Spring Boot application
-│   ├── config/
-│   │   └── McpServerConfig.java            # MCP server configuration
-│   ├── controller/
-│   │   └── HealthController.java           # Health check endpoints
+│   ├── GenericMcpServerApplication.java    # Main Spring Boot application (stdio entrypoint)
+│   ├── config/                            # (Optional) Configuration classes
 │   └── service/
-│       └── GenericMcpService.java          # MCP tools implementation
+│       └── GenericMcpService.java         # MCP tools implementation (all tool logic here)
 ├── src/main/resources/
-│   └── application.yml                     # Application configuration
+│   └── application.yml                    # Application configuration
+├── mvnw, mvnw.cmd, .mvn/                  # Maven Wrapper scripts and config
+├── start.sh                               # Start script (kills, builds, and runs server)
 └── pom.xml                                # Maven dependencies
 ```
 
-## Configuration
+## Main Classes
 
-The server is configured via `src/main/resources/application.yml`:
-
-- **Port**: 8081 (configurable)
-- **MCP Endpoint**: `/mcp`
-- **Transport**: WebMVC with Server-Sent Events (auto-configured)
-- **Capabilities**: Tools, Resources, Prompts, and Completions enabled
-- **Logging**: DEBUG level for MCP and application packages
+- **GenericMcpServerApplication.java**: Entry point for the Spring Boot application. Starts the server in stdio mode for integration with tools like Claude Desktop.
+- **GenericMcpService.java**: Contains all MCP tool implementations. Each method is annotated with `@Tool` and can be customized for your use case.
 
 ## Development
 
 ### Building
 
 ```bash
-mvn clean compile
+./mvnw clean package
 ```
 
 ### Running Tests
 
 ```bash
-mvn test
+./mvnw test
 ```
 
 ### Creating a JAR
 
 ```bash
-mvn clean package
+./mvnw clean package
 ```
 
 ## Extending the Server
