@@ -1,15 +1,14 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: generic-mcp-server
+  main:
+    banner-mode: off
+    log-startup-info: false
   ai:
     mcp:
       server:
         enabled: true
-        # WebMVC SSE transport is auto-configured by spring-ai-starter-mcp-server-webmvc
-        endpoint: /mcp
+        # Stdio transport only for Claude Desktop compatibility
         capabilities:
           tools: true
           resources: true
@@ -19,3 +18,5 @@ logging:
   level:
     com.example.genericmcp: DEBUG
     org.springframework.ai.mcp: DEBUG
+    org.springframework.ai: DEBUG
+    root: WARN

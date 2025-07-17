@@ -7,11 +7,16 @@ import org.springframework.stereotype.Service;
 /**
  * Generic MCP Service that provides template implementations for common MCP tools.
  * 
+ * DUAL TRANSPORT SUPPORT:
+ * This server supports both transport methods:
+ * - Stdio Transport: For Claude Desktop integration (spawned as a process)
+ * - WebMVC SSE Transport: For web clients at http://localhost:8081/mcp
+ * 
  * TO CUSTOMIZE THIS SERVICE:
  * 1. Replace the simple string returns with actual business logic
  * 2. Add proper input validation and error handling
  * 3. Integrate with your data sources (databases, APIs, files, etc.)
- * 4. Add additional tools by creating new @Tool annotated methods
+ * 4. Add additional tools by creating new methods
  * 5. Update tool descriptions and parameter descriptions to match your use case
  */
 @Service
@@ -47,7 +52,6 @@ public class GenericMcpService {
     public String getData(
             @ToolParam(description = "The type of data to retrieve") String dataType,
             @ToolParam(description = "Optional filter criteria", required = false) String filter) {
-        
         // TODO: Replace with actual data retrieval logic
         // Example implementations:
         // - Query database: return databaseService.findByTypeAndFilter(dataType, filter);
@@ -70,7 +74,6 @@ public class GenericMcpService {
     public String processText(
             @ToolParam(description = "The text content to process") String content,
             @ToolParam(description = "The type of processing to perform") String operation) {
-        
         // TODO: Replace with actual text processing logic
         // Example implementations:
         // - Sentiment analysis: return sentimentService.analyze(content);
@@ -95,7 +98,6 @@ public class GenericMcpService {
             @ToolParam(description = "First number for calculation") Double num1,
             @ToolParam(description = "Second number for calculation") Double num2,
             @ToolParam(description = "Operation to perform (add, subtract, multiply, divide)") String operation) {
-        
         // TODO: Replace with actual calculation logic
         // Example implementations:
         // - Financial calculations: return financialService.calculate(num1, num2, operation);
@@ -117,7 +119,6 @@ public class GenericMcpService {
     @Tool(description = "Retrieves system information and status")
     public String getSystemInfo(
             @ToolParam(description = "Type of system information to retrieve") String infoType) {
-        
         // TODO: Replace with actual system information retrieval
         // Example implementations:
         // - Health checks: return healthService.getHealth(infoType);
@@ -141,7 +142,6 @@ public class GenericMcpService {
     public String validateData(
             @ToolParam(description = "The data to validate") String data,
             @ToolParam(description = "The validation rules to apply") String rules) {
-        
         // TODO: Replace with actual validation logic
         // Example implementations:
         // - Schema validation: return schemaValidator.validate(data, rules);

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!-- Completely silent configuration for MCP server -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    <root level="OFF"/>
+</configuration>

@@ -40,16 +40,10 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring Boot Starter Web for WebMVC -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <!-- Spring AI MCP Server WebMVC Boot Starter -->
+        <!-- Spring AI MCP Server Boot Starter (stdio only) -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+            <artifactId>spring-ai-starter-mcp-server</artifactId>
         </dependency>
 
         <!-- Spring Boot Starter Test -->

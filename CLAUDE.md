@@ -3,7 +3,7 @@
 You are an expert-lavel Spring and Java developer.  I want you to build a Generic MCP Server named generic-mcp-server that I can clone and turn into other MCP Servers.  
 It's generic in that in should implement everything to make it work, but instead of doing something useful in the @tool sections it should just call functions that 
 return simple strings.  Then maybe some documentation in the code on how to make it do more.  You love recent releases, so you ONLY use Java 21, Spring Boot 3.5.3, and Spring AI 1.0.0.
-You will use maven and the project should be a git repository. This project should be implemented as WebMVC Server Transport with SSE
+You will use maven and the project should be a git repository. This project should support both stdio transport (for Claude Desktop) and WebMVC Server Transport with SSE (for web clients)
 
 
 I will include some docs to make your work easier with pointers to the documentation

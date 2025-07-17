@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "generic-mcp-server": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "java -Dlogging.level.root=OFF -Dspring.main.banner-mode=off -Dspring.main.log-startup-info=false -jar /Users/dbbaskette/Projects/generic-mcp-server/target/generic-mcp-server-1.0.0.jar 2>/dev/null"
+      ],
+      "cwd": "/Users/dbbaskette/Projects/generic-mcp-server"
+    }
+  }
+}
