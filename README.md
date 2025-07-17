@@ -4,7 +4,9 @@ A generic Model Context Protocol (MCP) server built with Spring Boot 3.5.3, Spri
 
 ## Features
 
-- **Stdio Transport**: Designed for integration with tools like Claude Desktop (runs as a process, communicates via standard input/output)
+- **Dual Transport Support**: 
+  - **Stdio Transport**: For integration with tools like Claude Desktop (runs as a process, communicates via standard input/output)
+  - **SSE Transport**: Web server with Server-Sent Events at http://localhost:8082/mcp
 - **Generic MCP Tools**: Pre-implemented tools that return simple strings (ready for customization)
 - **Spring Boot 3.5.3**: Latest stable Spring Boot version
 - **Spring AI 1.0.0**: Latest Spring AI framework integration
@@ -29,7 +31,9 @@ cd generic-mcp-server
 ./start.sh
 ```
 
-The server will start and wait for stdio input (no web port is exposed by default).
+The server will start and be available via:
+- **Stdio**: For Claude Desktop integration (default)
+- **Web**: http://localhost:8082/mcp for SSE transport
 
 ### Stopping the Server
 - Use `Ctrl+C` in the terminal to stop the server.
@@ -61,11 +65,19 @@ spring:
     mcp:
       server:
         enabled: true         # Enable MCP server
-        # Stdio transport only for Claude Desktop compatibility
+        stdio: true          # Enable stdio transport for Claude Desktop
+        name: generic-mcp-server  # Server name for MCP protocol
+        version: 1.0.0       # Server version
+        type: SYNC           # Server type (SYNC/ASYNC)
+        instructions: "Generic MCP server providing example tools and resources"
         capabilities:
-          tools: true         # Enable tool support
-          resources: true     # Enable resource support
-          prompts: true       # Enable prompt support
+          tools: true        # Enable tool support
+          resources: true    # Enable resource support
+          prompts: true      # Enable prompt support
+
+# Web server configuration for SSE transport
+server:
+  port: 8082                # Web server port for SSE transport
 
 logging:
   level:
@@ -80,7 +92,7 @@ logging:
 ```
 generic-mcp-server/
 ├── src/main/java/com/example/genericmcp/
-│   ├── GenericMcpServerApplication.java    # Main Spring Boot application (stdio entrypoint)
+│   ├── GenericMcpServerApplication.java    # Main Spring Boot application (dual transport)
 │   ├── config/                            # (Optional) Configuration classes
 │   └── service/
 │       └── GenericMcpService.java         # MCP tools implementation (all tool logic here)
@@ -93,8 +105,22 @@ generic-mcp-server/
 
 ## Main Classes
 
-- **GenericMcpServerApplication.java**: Entry point for the Spring Boot application. Starts the server in stdio mode for integration with tools like Claude Desktop.
+- **GenericMcpServerApplication.java**: Entry point for the Spring Boot application. Supports both stdio transport (for Claude Desktop) and SSE transport (for web clients).
 - **GenericMcpService.java**: Contains all MCP tool implementations. Each method is annotated with `@Tool` and can be customized for your use case.
+
+## Transport Modes
+
+### Stdio Transport (Default)
+- Used by Claude Desktop and similar tools
+- Communicates via standard input/output
+- No web port required
+- Run with: `./start.sh` or `java -jar target/generic-mcp-server-1.0.0.jar`
+
+### SSE Transport (Web)
+- Available at http://localhost:8082/mcp
+- Uses Server-Sent Events for real-time communication
+- Useful for web-based clients
+- Same server instance handles both transports
 
 ## Development
 

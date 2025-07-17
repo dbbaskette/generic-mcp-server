@@ -46,6 +46,12 @@
             <artifactId>spring-ai-starter-mcp-server</artifactId>
         </dependency>
 
+        <!-- Spring AI MCP Server WebMVC Starter (SSE transport) -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        </dependency>
+
         <!-- Spring Boot Starter Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

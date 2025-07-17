@@ -34,12 +34,17 @@ build_project() {
 # Function to start the server
 start_server() {
     echo "🚀 Starting MCP server..."
-    echo "📝 Server will be ready to accept stdio connections"
+    echo "📝 Server supports both stdio and web transports:"
+    echo "   • Stdio transport: Ready for Claude Desktop connections"
+    echo "   • Web transport: http://localhost:8082"
+    echo "   • SSE endpoint: http://localhost:8082/sse"
+    echo "   • MCP endpoint: http://localhost:8082/mcp/message"
     echo "💡 Use Ctrl+C to stop the server"
     echo ""
-    echo "=" * 50
-    echo "MCP SERVER STARTED - Waiting for stdio input..."
-    echo "=" * 50
+    echo "=" * 60
+    echo "MCP SERVER STARTED"
+    echo "Web URL: http://localhost:8082"
+    echo "=" * 60
     echo ""
     
     # Run the server

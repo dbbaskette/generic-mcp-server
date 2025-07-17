@@ -5,7 +5,9 @@
 # - banner-mode: Disables Spring Boot startup banner
 # - log-startup-info: Suppresses startup info logs
 # - ai.mcp.server.enabled: Enables MCP server (stdio transport)
+# - ai.mcp.server.stdio: Enables stdio transport for Claude Desktop
 # - ai.mcp.server.capabilities: Enables tools/resources/prompts
+# - server.port: Web server port for SSE transport
 # - logging.level: Sets log levels for app, MCP, Spring AI, and root
 # =============================================
 
@@ -19,11 +21,19 @@ spring:
     mcp:
       server:
         enabled: true
-        # Stdio transport only for Claude Desktop compatibility
+        stdio: true  # Enable stdio transport for Claude Desktop
+        name: generic-mcp-server
+        version: 1.0.0
+        type: SYNC
+        instructions: "Generic MCP server providing example tools and resources"
         capabilities:
           tools: true
           resources: true
           prompts: true
+
+# Web server configuration for SSE transport
+server:
+  port: 8082
 
 logging:
   level:
