@@ -17,7 +17,7 @@ spring:
         enabled: true
         stdio: true  # Enable stdio transport for Claude Desktop
         name: generic-mcp-server
-        version: 2.0.0
+        version: 2.0.1
         type: SYNC
         instructions: "Generic MCP server providing example tools and resources via STDIO transport"
         capabilities:

@@ -4,7 +4,7 @@
       "command": "sh",
       "args": [
         "-c",
-        "java -Dlogging.level.root=OFF -Dspring.main.banner-mode=off -Dspring.main.log-startup-info=false -jar $PWD/target/generic-mcp-server-1.0.0.jar --spring.profiles.active=stdio 2>/dev/null"
+        "java -Dlogging.level.root=OFF -Dspring.main.banner-mode=off -Dspring.main.log-startup-info=false -jar $PWD/target/generic-mcp-server-*.jar --spring.profiles.active=stdio 2>/dev/null"
       ],
       "cwd": "$PWD",
       "description": "Generic MCP Server with template implementations for common tools. Provides 8 sample tools: get_hello, get_data, process_text, calculate, get_system_info, validate_data, get_version, and list_tools."
