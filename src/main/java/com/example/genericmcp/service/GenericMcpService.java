@@ -2,6 +2,7 @@ package com.example.genericmcp.service;
 
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GenericMcpService {
+
+    @Value("${spring.ai.mcp.server.version}")
+    private String serverVersion;
 
     /**
      * Simple greeting tool for testing MCP functionality.
@@ -153,6 +157,15 @@ public class GenericMcpService {
     }
 
     /**
+     * Returns the current version of the MCP server.
+     * The version is configured in the application properties files.
+     */
+    @Tool(description = "Returns the current version of the MCP server")
+    public String getVersion() {
+        return String.format("Generic MCP Server version: %s", serverVersion);
+    }
+
+    /**
      * Lists all available tools provided by this MCP server.
      * This is useful for clients to discover what capabilities are available.
      */
@@ -167,7 +180,8 @@ public class GenericMcpService {
                4. calculate - Performs mathematical calculations
                5. get_system_info - Retrieves system information and status
                6. validate_data - Validates data according to specified rules
-               7. list_tools - Lists all available tools (this tool)
+               7. get_version - Returns the current version of the MCP server
+               8. list_tools - Lists all available tools (this tool)
                
                Each tool returns a simple string response in this generic implementation.
                Customize the implementations in GenericMcpService.java to add real functionality.

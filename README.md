@@ -4,9 +4,10 @@ A generic Model Context Protocol (MCP) server built with Spring Boot 3.5.3, Spri
 
 ## Features
 
-- **Dual Transport Support**: 
+- **Configurable Transport Support**: 
   - **Stdio Transport**: For integration with tools like Claude Desktop (runs as a process, communicates via standard input/output)
   - **SSE Transport**: Web server with Server-Sent Events at http://localhost:8082/mcp
+  - **Profile-Based Selection**: Use Spring profiles to run specific transport modes
 - **Generic MCP Tools**: Pre-implemented tools that return simple strings (ready for customization)
 - **Spring Boot 3.5.3**: Latest stable Spring Boot version
 - **Spring AI 1.0.0**: Latest Spring AI framework integration
@@ -27,13 +28,23 @@ A generic Model Context Protocol (MCP) server built with Spring Boot 3.5.3, Spri
 git clone https://github.com/dbbaskette/generic-mcp-server.git
 cd generic-mcp-server
 
-# Start the server (kills any running instance, builds, and runs)
+# Build the project
+./mvnw clean package
+
+# Run with STDIO transport (for Claude Desktop)
+java -jar target/generic-mcp-server-1.0.0.jar --spring.profiles.active=stdio
+
+# OR run with SSE transport (for web clients)
+java -jar target/generic-mcp-server-1.0.0.jar --spring.profiles.active=sse
+
+# OR run with default configuration (STDIO transport)
 ./start.sh
 ```
 
-The server will start and be available via:
-- **Stdio**: For Claude Desktop integration (default)
-- **Web**: http://localhost:8082/mcp for SSE transport
+**Transport Mode Selection:**
+- **Default**: STDIO transport (most common - for Claude Desktop integration)
+- **SSE Profile**: `--spring.profiles.active=sse` - Web server at http://localhost:8082/mcp for SSE transport
+- **Explicit STDIO**: `--spring.profiles.active=stdio` - Same as default but explicit
 
 ### Stopping the Server
 - Use `Ctrl+C` in the terminal to stop the server.
@@ -52,39 +63,57 @@ This generic implementation provides the following tools (see `GenericMcpService
 
 ## Configuration
 
-The server is configured via `src/main/resources/application.yml`:
+The server supports multiple configuration files for different transport modes:
 
+### Application Profiles
+
+**Default Configuration** (`application.yml`):
+- Enables STDIO transport (most common use case)
+- Disables web server for clean STDIO-only operation
+
+**STDIO Profile** (`application-stdio.yml`):
+- Enables only STDIO transport for Claude Desktop
+- Disables web server (`server.port: -1`)
+- Use with: `--spring.profiles.active=stdio`
+
+**SSE Profile** (`application-sse.yml`):
+- Enables only SSE transport for web clients
+- Disables STDIO transport (`stdio: false`)
+- Web server on port 8082
+- Use with: `--spring.profiles.active=sse`
+
+### Configuration Examples
+
+**STDIO Profile Configuration:**
 ```yaml
 spring:
-  application:
-    name: generic-mcp-server   # Application name
-  main:
-    banner-mode: off          # Disable Spring Boot banner
-    log-startup-info: false   # Suppress startup info logs
   ai:
     mcp:
       server:
-        enabled: true         # Enable MCP server
-        stdio: true          # Enable stdio transport for Claude Desktop
-        name: generic-mcp-server  # Server name for MCP protocol
-        version: 1.0.0       # Server version
-        type: SYNC           # Server type (SYNC/ASYNC)
-        instructions: "Generic MCP server providing example tools and resources"
+        enabled: true
+        stdio: true
         capabilities:
-          tools: true        # Enable tool support
-          resources: true    # Enable resource support
-          prompts: true      # Enable prompt support
-
-# Web server configuration for SSE transport
+          tools: true
+          resources: true
+          prompts: true
 server:
-  port: 8082                # Web server port for SSE transport
+  port: -1  # Disable web server
+```
 
-logging:
-  level:
-    com.example.genericmcp: DEBUG           # Debug logging for app
-    org.springframework.ai.mcp: DEBUG       # Debug logging for MCP
-    org.springframework.ai: DEBUG           # Debug logging for Spring AI
-    root: WARN                             # Default log level
+**SSE Profile Configuration:**
+```yaml
+spring:
+  ai:
+    mcp:
+      server:
+        enabled: true
+        stdio: false  # Disable STDIO
+        capabilities:
+          tools: true
+          resources: true
+          prompts: true
+server:
+  port: 8082  # Enable web server for SSE
 ```
 
 ## Project Structure
@@ -110,17 +139,22 @@ generic-mcp-server/
 
 ## Transport Modes
 
-### Stdio Transport (Default)
+### Stdio Transport
 - Used by Claude Desktop and similar tools
 - Communicates via standard input/output
 - No web port required
-- Run with: `./start.sh` or `java -jar target/generic-mcp-server-1.0.0.jar`
+- Run with: `java -jar target/generic-mcp-server-1.0.0.jar --spring.profiles.active=stdio`
 
 ### SSE Transport (Web)
 - Available at http://localhost:8082/mcp
 - Uses Server-Sent Events for real-time communication
 - Useful for web-based clients
-- Same server instance handles both transports
+- Run with: `java -jar target/generic-mcp-server-1.0.0.jar --spring.profiles.active=sse`
+
+### Profile Selection Benefits
+- **Cleaner separation**: Each transport mode runs independently
+- **Resource efficiency**: No unnecessary servers running
+- **Production ready**: Choose the exact transport needed for your use case
 
 ## Development
 

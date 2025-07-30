@@ -1,8 +1,11 @@
 # =============================================
-# Default Application Configuration for Generic MCP Server
+# SSE Transport Configuration for Generic MCP Server
 # ---------------------------------------------
-# Default configuration uses STDIO transport (most common use case).
-# For SSE transport, use: --spring.profiles.active=sse
+# This profile configures the server for SSE (Server-Sent Events) transport only,
+# suitable for web clients and HTTP-based integrations.
+# 
+# Usage: java -jar generic-mcp-server.jar --spring.profiles.active=sse
+# Server will be available at: http://localhost:8082/mcp
 # =============================================
 
 spring:
@@ -15,19 +18,19 @@ spring:
     mcp:
       server:
         enabled: true
-        stdio: true  # Enable stdio transport for Claude Desktop
+        stdio: false  # Disable STDIO transport for pure SSE mode
         name: generic-mcp-server
         version: 2.0.0
         type: SYNC
-        instructions: "Generic MCP server providing example tools and resources via STDIO transport"
+        instructions: "Generic MCP server providing example tools and resources via SSE transport"
         capabilities:
           tools: true
           resources: true
           prompts: true
 
-# Disable web server for default STDIO mode
+# Web server configuration for SSE transport
 server:
-  port: -1
+  port: 8082
 
 logging:
   level:
